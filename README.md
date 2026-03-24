@@ -193,10 +193,13 @@ This project demonstrates a complete smart EV charging ecosystem combining renew
 
 ## 👩‍💻 Author
 
-Names
+VIRIKA OLIVIA SOANS
+R SINDHU
+JANARDHAN K S 
+HARSHITA JEETENDRA BHUTE
 
 ---
 
 ## ⭐ Acknowledgement
 
-This project was developed as part of academic research in smart energy systems and IoT-enabled electric vehicle infrastructure.
+This project was developed as part of academic research in smart energy systems and IoT-enabled electric vehicle infrastructure.(MAJOR PROJECT)
