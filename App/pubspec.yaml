@@ -1,0 +1,39 @@
+name: ev_charging_app
+description: EV Wireless Charging Dashboard
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI
+  lottie: ^3.1.0
+  fl_chart: ^0.66.0
+
+  # Firebase Core
+  firebase_core: ^2.30.0
+  firebase_auth: ^4.19.0
+  firebase_database: ^10.5.0
+
+  # Google Sign-In
+  google_sign_in: ^6.2.1
+
+  # 🔔 Push Notifications
+  firebase_messaging: ^14.7.10
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  image_path: assets/icon.png

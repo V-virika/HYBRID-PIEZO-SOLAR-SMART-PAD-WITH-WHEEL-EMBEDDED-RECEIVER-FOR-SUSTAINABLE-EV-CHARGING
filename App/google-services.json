@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "700915442646",
+    "firebase_url": "https://ev-wireless-charging-ae877-default-rtdb.firebaseio.com",
+    "project_id": "ev-wireless-charging-ae877",
+    "storage_bucket": "ev-wireless-charging-ae877.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700915442646:android:b244a75293573bd5b3fa77",
+        "android_client_info": {
+          "package_name": "com.example.ev_charging_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700915442646-vk09v2do6oal26atnnkig0at9uki9c63.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ev_charging_app",
+            "certificate_hash": "4f361fdd247a237c5eb9aa4f74b2dc924b71ee8c"
+          }
+        },
+        {
+          "client_id": "700915442646-kpfbmbaljjqj7n2n78c1ecucrt24r0iq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVRHbB8ce7Ur6rKgM0BYCZftiZMXbb7MA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700915442646-kpfbmbaljjqj7n2n78c1ecucrt24r0iq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
