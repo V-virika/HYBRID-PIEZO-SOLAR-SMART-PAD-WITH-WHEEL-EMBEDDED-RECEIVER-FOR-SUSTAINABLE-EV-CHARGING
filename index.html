@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EV Wireless Charging Dashboard</title>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      padding: 20px;
+    }
+    h2 { color: #2c3e50; }
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .status span {
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 20px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #219150;
+    }
+    canvas {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🚗 EV Wireless Charging – Live Dashboard</h2>
+
+<div class="card status">
+  <p>⚡ Current: <span id="current">0</span> A</p>
+  <p>🔌 Power: <span id="power">0</span> W</p>
+  <p>🔋 Energy: <span id="energy">0</span> Wh</p>
+  <p>⏳ Predicted Time: <span id="time">0</span> min</p>
+  <p>📡 Charging Status: <span id="status">OFF</span></p>
+  <p>⚠️ Fault: <span id="fault">NO</span></p>
+</div>
+
+<div class="card">
+  <canvas id="powerChart"></canvas>
+</div>
+
+<div class="card">
+  <canvas id="currentChart"></canvas>
+</div>
+
+<div class="card">
+  <canvas id="energyChart"></canvas>
+</div>
+
+<button onclick="exportCSV()">⬇️ Export Dataset to CSV</button>
+
+<script>
+  // ================= FIREBASE CONFIG =================
+  var firebaseConfig = {
+    databaseURL: "https://ev-wireless-charging-ae877-default-rtdb.firebaseio.com/"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  var dbRef = firebase.database().ref("EV_001").limitToLast(50);
+
+  // ================= DATA STORAGE =================
+  var labels = [];
+  var powerData = [];
+  var currentData = [];
+  var energyData = [];
+  var tableData = [];
+
+  // ================= CHARTS =================
+  function createChart(ctx, label, color, dataArr) {
+    return new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: label,
+          data: dataArr,
+          borderColor: color,
+          backgroundColor: color,
+          fill: false,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: { display: true },
+          y: { display: true }
+        }
+      }
+    });
+  }
+
+  var powerChart = createChart(
+    document.getElementById("powerChart"),
+    "Power (W)",
+    "red",
+    powerData
+  );
+
+  var currentChart = createChart(
+    document.getElementById("currentChart"),
+    "Current (A)",
+    "blue",
+    currentData
+  );
+
+  var energyChart = createChart(
+    document.getElementById("energyChart"),
+    "Energy (Wh)",
+    "green",
+    energyData
+  );
+
+  // ================= REAL-TIME LISTENER =================
+  dbRef.on("child_added", function(snapshot) {
+    var d = snapshot.val();
+
+    var timeLabel = new Date().toLocaleTimeString();
+
+    labels.push(timeLabel);
+    powerData.push(d.power);
+    currentData.push(d.current);
+    energyData.push(d.energy);
+
+    tableData.push({
+      time: timeLabel,
+      current: d.current,
+      power: d.power,
+      energy: d.energy
+    });
+
+    if (labels.length > 20) {
+      labels.shift();
+      powerData.shift();
+      currentData.shift();
+      energyData.shift();
+    }
+
+    // UI update
+    document.getElementById("current").innerText = d.current.toFixed(2);
+    document.getElementById("power").innerText = d.power.toFixed(2);
+    document.getElementById("energy").innerText = d.energy.toFixed(2);
+    document.getElementById("status").innerText = d.charging ? "ON" : "OFF";
+    document.getElementById("fault").innerText = d.fault ? "YES" : "NO";
+
+    // Predicted time (simple estimation)
+    var capacityWh = 10;
+    var remaining = capacityWh - d.energy;
+    var timeMin = (remaining / d.power) * 60;
+    document.getElementById("time").innerText =
+      timeMin > 0 && timeMin < 999 ? timeMin.toFixed(1) : "0";
+
+    powerChart.update();
+    currentChart.update();
+    energyChart.update();
+  });
+
+  // ================= EXPORT TO CSV =================
+  function exportCSV() {
+    var csv = "Time,Current(A),Power(W),Energy(Wh)\n";
+    tableData.forEach(r => {
+      csv += `${r.time},${r.current},${r.power},${r.energy}\n`;
+    });
+
+    var blob = new Blob([csv], { type: "text/csv" });
+    var url = URL.createObjectURL(blob);
+
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "EV_Charging_Data.csv";
+    a.click();
+  }
+</script>
+
+</body>
+</html>
